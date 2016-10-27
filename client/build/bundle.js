@@ -56,9 +56,9 @@
 
 	var _reactRouter = __webpack_require__(172);
 
-	var _index = __webpack_require__(227);
+	var _app = __webpack_require__(227);
 
-	var _index2 = _interopRequireDefault(_index);
+	var _app2 = _interopRequireDefault(_app);
 
 	var _register = __webpack_require__(230);
 
@@ -72,11 +72,15 @@
 
 	var _account2 = _interopRequireDefault(_account);
 
-	var _search = __webpack_require__(233);
+	var _search = __webpack_require__(235);
 
 	var _search2 = _interopRequireDefault(_search);
 
-	__webpack_require__(234);
+	var _settings = __webpack_require__(236);
+
+	var _settings2 = _interopRequireDefault(_settings);
+
+	__webpack_require__(237);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -85,7 +89,15 @@
 	ReactDOM.render(React.createElement(
 	  _reactRouter.Router,
 	  { history: _reactRouter.hashHistory },
-	  React.createElement(_reactRouter.Route, { path: "/", component: _index2.default })
+	  React.createElement(
+	    _reactRouter.Route,
+	    { path: "/", component: _app2.default },
+	    React.createElement(_reactRouter.Route, { path: "/search", component: _search2.default }),
+	    React.createElement(_reactRouter.Route, { path: "/register", component: _register2.default }),
+	    React.createElement(_reactRouter.Route, { path: "/login", component: _login2.default }),
+	    React.createElement(_reactRouter.Route, { path: "/account", component: _account2.default }),
+	    React.createElement(_reactRouter.Route, { path: "/settings", component: _settings2.default })
+	  )
 	), document.getElementById("app"));
 
 /***/ },
@@ -26394,32 +26406,36 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var Index = function (_React$Component) {
-	  _inherits(Index, _React$Component);
+	var App = function (_React$Component) {
+	  _inherits(App, _React$Component);
 
-	  function Index() {
-	    _classCallCheck(this, Index);
+	  function App() {
+	    _classCallCheck(this, App);
 
-	    return _possibleConstructorReturn(this, (Index.__proto__ || Object.getPrototypeOf(Index)).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
 	  }
 
-	  _createClass(Index, [{
+	  _createClass(App, [{
 	    key: "render",
 	    value: function render() {
 	      return React.createElement(
 	        "div",
 	        { className: "main-container" },
 	        React.createElement(_header2.default, null),
-	        React.createElement("div", { className: "main-body" }),
+	        React.createElement(
+	          "div",
+	          { className: "main-body" },
+	          this.props.children
+	        ),
 	        React.createElement(_footer2.default, null)
 	      );
 	    }
 	  }]);
 
-	  return Index;
+	  return App;
 	}(React.Component);
 
-	exports.default = Index;
+	exports.default = App;
 
 /***/ },
 /* 228 */
@@ -26436,6 +26452,8 @@
 	var _react = __webpack_require__(1);
 
 	var React = _interopRequireWildcard(_react);
+
+	var _reactRouter = __webpack_require__(172);
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -26470,8 +26488,8 @@
 	              "h1",
 	              { className: "header-title" },
 	              React.createElement(
-	                "a",
-	                { href: "/" },
+	                _reactRouter.Link,
+	                { to: "/" },
 	                "Book Trader"
 	              )
 	            ),
@@ -26485,13 +26503,13 @@
 	            "div",
 	            { className: "header-middle" },
 	            React.createElement(
-	              "a",
-	              { className: "header-button-middle", href: "/search" },
+	              _reactRouter.Link,
+	              { className: "header-button-middle", to: "/search" },
 	              "Browse Books"
 	            ),
 	            React.createElement(
-	              "a",
-	              { className: "header-button-middle", href: "/account" },
+	              _reactRouter.Link,
+	              { className: "header-button-middle", to: "/account" },
 	              "My Books"
 	            )
 	          ),
@@ -26499,18 +26517,18 @@
 	            "div",
 	            { className: "header-right" },
 	            React.createElement(
-	              "a",
-	              { className: "header-button-right", href: "/register" },
+	              _reactRouter.Link,
+	              { className: "header-button-right", to: "/register" },
 	              "Register"
 	            ),
 	            React.createElement(
-	              "a",
-	              { className: "header-button-right", href: "/login" },
+	              _reactRouter.Link,
+	              { className: "header-button-right", to: "/login" },
 	              "Login"
 	            ),
 	            React.createElement(
-	              "a",
-	              { className: "header-button-right", href: "/settings" },
+	              _reactRouter.Link,
+	              { className: "header-button-right", to: "/settings" },
 	              "Settings"
 	            )
 	          )
@@ -26584,39 +26602,454 @@
 
 /***/ },
 /* 230 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Register = function (_React$Component) {
+	  _inherits(Register, _React$Component);
+
+	  function Register() {
+	    _classCallCheck(this, Register);
+
+	    return _possibleConstructorReturn(this, (Register.__proto__ || Object.getPrototypeOf(Register)).apply(this, arguments));
+	  }
+
+	  _createClass(Register, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(
+	        "h1",
+	        null,
+	        "Register View"
+	      );
+	    }
+	  }]);
+
+	  return Register;
+	}(React.Component);
+
+	exports.default = Register;
 
 /***/ },
 /* 231 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Login = function (_React$Component) {
+	  _inherits(Login, _React$Component);
+
+	  function Login() {
+	    _classCallCheck(this, Login);
+
+	    return _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).apply(this, arguments));
+	  }
+
+	  _createClass(Login, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(
+	        "h1",
+	        null,
+	        "Login View"
+	      );
+	    }
+	  }]);
+
+	  return Login;
+	}(React.Component);
+
+	exports.default = Login;
 
 /***/ },
 /* 232 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	var _form = __webpack_require__(233);
+
+	var _form2 = _interopRequireDefault(_form);
+
+	var _grid = __webpack_require__(234);
+
+	var _grid2 = _interopRequireDefault(_grid);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Account = function (_React$Component) {
+	  _inherits(Account, _React$Component);
+
+	  function Account() {
+	    _classCallCheck(this, Account);
+
+	    return _possibleConstructorReturn(this, (Account.__proto__ || Object.getPrototypeOf(Account)).apply(this, arguments));
+	  }
+
+	  _createClass(Account, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(
+	        "div",
+	        { className: "account-container" },
+	        React.createElement(
+	          "h1",
+	          null,
+	          "My Books"
+	        ),
+	        React.createElement(_form2.default, null),
+	        React.createElement(_grid2.default, null)
+	      );
+	    }
+	  }]);
+
+	  return Account;
+	}(React.Component);
+
+	exports.default = Account;
 
 /***/ },
 /* 233 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Form = function (_React$Component) {
+	  _inherits(Form, _React$Component);
+
+	  function Form(props) {
+	    _classCallCheck(this, Form);
+
+	    var _this = _possibleConstructorReturn(this, (Form.__proto__ || Object.getPrototypeOf(Form)).call(this, props));
+
+	    _this.state = { value: "" };
+	    _this.handleChange = _this.handleChange.bind(_this);
+	    _this.handleSubmit = _this.handleSubmit.bind(_this);
+	    _this.handleDelete = _this.handleDelete.bind(_this);
+	    return _this;
+	  }
+
+	  _createClass(Form, [{
+	    key: "handleChange",
+	    value: function handleChange(event) {
+	      this.setState({ value: event.target.value.substr(0, 140) });
+	    }
+	  }, {
+	    key: "handleDelete",
+	    value: function handleDelete(event) {
+	      alert("This would delete a book");
+	    }
+	  }, {
+	    key: "handleSubmit",
+	    value: function handleSubmit(event) {
+
+	      var xmlhttp = new XMLHttpRequest();
+
+	      xmlhttp.onreadystatechange = function () {
+	        if (xmlhttp.readyState === 4) {
+	          var response = JSON.parse(xmlhttp.responseText);
+	          console.log(response);
+	          if (xmlhttp.status === 200 && response === "OK") {
+	            console.log("OK");
+	          } else {
+	            console.log("ERROR");
+	          }
+	        }
+	      };
+	      xmlhttp.open("POST", "api/books", true);
+	      xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+	      xmlhttp.send("search=" + this.state.value);
+	    }
+	  }, {
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(
+	        "div",
+	        { className: "form-container" },
+	        React.createElement("input", { className: "form-input",
+	          type: "text",
+	          value: this.state.value,
+	          onChange: this.handleChange }),
+	        React.createElement(
+	          "button",
+	          { className: "form-button",
+	            onClick: this.handleSubmit },
+	          "Add Book"
+	        ),
+	        React.createElement(
+	          "button",
+	          { className: "delete-button",
+	            onClick: this.handleDelete },
+	          "Remove Book"
+	        )
+	      );
+	    }
+	  }]);
+
+	  return Form;
+	}(React.Component);
+
+	exports.default = Form;
 
 /***/ },
 /* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Grid = function (_React$Component) {
+	  _inherits(Grid, _React$Component);
+
+	  function Grid(props) {
+	    _classCallCheck(this, Grid);
+
+	    var _this = _possibleConstructorReturn(this, (Grid.__proto__ || Object.getPrototypeOf(Grid)).call(this, props));
+
+	    _this.state = { data: [{ "title": "JavaScript and JQuery", "authors": "Jon Duckett", "description": "This book covers: 1. Basic programming concepts - assuming no prior knowledge of programming beyond an ability to create a web page using HTML & CSS ; 2. Core elements of the JavaScript language - so you can learn how to write your own scripts from scratch ; 3. jQuery - which will allow you to simplify the process of writing scripts (this is introduced half-way through the book once you have a solid understanding of JavaScript) ; 4. How to recreate techniques you will have seen on other web sites such as sliders, content filters, form validation, updating content using Ajax, and more. Each chapter: Breaks subjects down into bite-sized chunks with a new topic on each page ; Contains clear descriptions of syntax, each one demonstrated with inspiring code samples ; Uses diagrams and photography to explain complex concepts in a visual way. This book enables you to use & customize thousands of scripts, JavaScript APIs, and jQuery plugins that are freely available on the web as well as create your own scripts from scratch.", "isbn": "9781118871652", "pages": 640, "image": "http://books.google.com/books/content?id=_uTRAwAAQBAJ&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api" }, { "title": "JavaScript: The Good Parts", "authors": "Douglas Crockford", "description": "Most programming languages contain good and bad parts, but JavaScript has more than its share of the bad, having been developed and released in a hurry before it could be refined. This authoritative book scrapes away these bad features to reveal a subset of JavaScript that's more reliable, readable, and maintainable than the language as a whole—a subset you can use to create truly extensible and efficient code. Considered the JavaScript expert by many people in the development community, author Douglas Crockford identifies the abundance of good ideas that make JavaScript an outstanding object-oriented programming language-ideas such as functions, loose typing, dynamic objects, and an expressive object literal notation. Unfortunately, these good ideas are mixed in with bad and downright awful ideas, like a programming model based on global variables. When Java applets failed, JavaScript became the language of the Web by default, making its popularity almost completely independent of its qualities as a programming language. In JavaScript: The Good Parts, Crockford finally digs through the steaming pile of good intentions and blunders to give you a detailed look at all the genuinely elegant parts of JavaScript, including: Syntax Objects Functions Inheritance Arrays Regular expressions Methods Style Beautiful features The real beauty? As you move ahead with the subset of JavaScript that this book presents, you'll also sidestep the need to unlearn all the bad parts. Of course, if you want to find out more about the bad parts and how to use them badly, simply consult any other JavaScript book. With JavaScript: The Good Parts, you'll discover a beautiful, elegant, lightweight and highly expressive language that lets you create effective code, whether you're managing object libraries or just trying to get Ajax to run fast. If you develop sites or applications for the Web, this book is an absolute must.", "isbn": "9780596554873", "pages": 172, "image": "http://books.google.com/books/content?id=PXa2bby0oQ0C&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api" }, { "title": "Eloquent JavaScript", "authors": "Marijn Haverbeke", "description": "Provides information and examples on writing JavaScript code, covering such topics as syntax, control, data, regular expressions, and scripting.", "isbn": "9781593272821", "pages": 224, "image": "http://books.google.com/books/content?id=9U5I_tskq9MC&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api" }, { "title": "JavaScript: The Definitive Guide", "authors": "David Flanagan", "description": "This Fifth Edition is completely revised and expanded to cover JavaScript as it is used in today's Web 2.0 applications. This book is both an example-driven programmer's guide and a keep-on-your-desk reference, with new chapters that explain everything you need to know to get the most out of JavaScript, including: Scripted HTTP and Ajax XML processing Client-side graphics using the canvas tag Namespaces in JavaScript--essential when writing complex programs Classes, closures, persistence, Flash, and JavaScript embedded in Java applications Part I explains the core JavaScript language in detail. If you are new to JavaScript, it will teach you the language. If you are already a JavaScript programmer, Part I will sharpen your skills and deepen your understanding of the language. Part II explains the scripting environment provided by web browsers, with a focus on DOM scripting with unobtrusive JavaScript. The broad and deep coverage of client-side JavaScript is illustrated with many sophisticated examples that demonstrate how to: Generate a table of contents for an HTML document Display DHTML animations Automate form validation Draw dynamic pie charts Make HTML elements draggable Define keyboard shortcuts for web applications Create Ajax-enabled tool tips Use XPath and XSLT on XML documents loaded with Ajax And much more Part III is a complete reference for core JavaScript. It documents every class, object, constructor, method, function, property, and constant defined by JavaScript 1.5 and ECMAScript Version 3. Part IV is a reference for client-side JavaScript, covering legacy web browser APIs, the standard Level 2 DOM API, and emerging standards such as the XMLHttpRequest object and the canvas tag. More than 300,000 JavaScript programmers around the world have madethis their indispensable reference book for building JavaScript applications. \"A must-have reference for expert JavaScript programmers...well-organized and detailed.\" -- Brendan Eich, creator of JavaScript", "isbn": "0596554478", "pages": 1032, "image": "http://books.google.com/books/content?id=2weL0iAfrEMC&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api" }, { "title": "JavaScript Patterns", "authors": "Stoyan Stefanov", "description": "What's the best approach for developing an application with JavaScript? This book helps you answer that question with numerous JavaScript coding patterns and best practices. If you're an experienced developer looking to solve problems related to objects, functions, inheritance, and other language-specific categories, the abstractions and code templates in this guide are ideal—whether you're using JavaScript to write a client-side, server-side, or desktop application. Written by JavaScript expert Stoyan Stefanov—Senior Yahoo! Technical and architect of YSlow 2.0, the web page performance optimization tool—JavaScript Patterns includes practical advice for implementing each pattern discussed, along with several hands-on examples. You'll also learn about anti-patterns: common programming approaches that cause more problems than they solve. Explore useful habits for writing high-quality JavaScript code, such as avoiding globals, using single var declarations, and more Learn why literal notation patterns are simpler alternatives to constructor functions Discover different ways to define a function in JavaScript Create objects that go beyond the basic patterns of using object literals and constructor functions Learn the options available for code reuse and inheritance in JavaScript Study sample JavaScript approaches to common design patterns such as Singleton, Factory, Decorator, and more Examine patterns that apply specifically to the client-side browser environment", "isbn": "9781449396947", "pages": 236, "image": "http://books.google.com/books/content?id=WTZqecc9olUC&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api" }, { "title": "JavaScript", "authors": "David Flanagan", "description": "A revised and updated edition offers comprehensive coverage of ECMAScript 5 (the new JavaScript language standard) and also the new APIs introduced in HTML5, with chapters on functions and classes completely rewritten and updated to match current best practices and a new chapter on language extensions and subsets. Original.", "isbn": "9780596805524", "pages": 1078, "image": "http://books.google.com/books/content?id=4RChxt67lvwC&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api" }, { "title": "JavaScript: The Web Technologies Series", "authors": "Don Gosselin", "description": "Now in its fifth edition, JAVASCRIPT guides beginning programmers through Web application development using the JavaScript programming language. As with previous editions of this book, Don Gosselin introduces key Web authoring techniques with a strong focus on industry application. A real-world project, similar to what students would encounter in a professional setting, is developed throughout each chapter. Since professional Web development jobs often require programmers to add features to an existing site, each chapter project uses a professionally designed Web site. After completing the course, students will be able to use JavaScript to build professional quality, dynamic Web sites. Important Notice: Media content referenced within the product description or the product text may not be available in the ebook version.", "isbn": "9780538748872", "pages": 720, "image": "http://books.google.com/books/content?id=wvsO38OnZ9QC&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api" }, { "title": "JavaScript", "authors": "Dori Smith, Tom Negrino", "description": "With the proliferation of new, standards-compliant browsers, virtually all users and Web sites can successfully use the latest JavaScript techniques. This task-based, visual-reference guide has been fully revised and uses step-by-step instructions and plenty of screenshots to give beginning and intermediate scripters what they need to know to keep their skills up-to-date. Readers can start from the beginning to get a tour of the programming language, or look up specific tasks to learn just what they need to know. In this updated ninth edition, readers will find new information on scripting for mobile devices and updated code to work with the latest versions of all major browsers. Readers will also find an expanded focus on getting their JavaScript done quickly by using the near-ubiquitous jQuery library.", "isbn": "9780133846058", "pages": 552, "image": "http://books.google.com/books/content?id=f2UHBAAAQBAJ&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api" }, { "title": "JavaScript Developer's Dictionary", "authors": "Alexander J. Vincent", "description": "JavaScript, and each different version of JavaScript, interacts differently with each variety of Web browser, leaving Web developers scrambling to write code that will work in all the major browsers. \"JavaScript Developer's Dictionary\" brings all these variants into one volume, breaking down every object in the JavaScript language and how it applies to each browser.", "isbn": "0672322013", "pages": 1171, "image": "http://books.google.com/books/content?id=8oxJo5NITJUC&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api" }, { "title": "JavaScript by Example", "authors": "Ellie Quigley", "description": "The World’s Easiest Java Script Tutorial—Fully Updated! JavaScript by Example, Second Edition, is the easiest, most hands-on way to learn JavaScript. Legendary programming instructor Ellie Quigley has thoroughly updated her classic book to deliver the skills and information today’s JavaScript users need most—including up-to-the-minute coverage of JavaScript programming constructs, CSS, Ajax, JSON, and the latest JavaScript libraries and best practices. Quigley illuminates every technique with focused, classroom-tested code examples, detailed line-by-line explanations, and real program output. This exceptionally clear, easy-to-understand book takes you from your first script to advanced techniques. It’s the only JavaScript book you’ll ever need! New in This Edition End-of-chapter study tools, including classroom-tested labs Programming the DOM More Cascading Style Sheets Introduction to Ajax and JSON Explanation of how to develop interactive Web applications with dynamic, desktop-style interfaces Programmers’ preparation for HTML 5’s breakthrough capabilities This edition has been completely updated and includes many new and completely rewritten code examples; contains fully revised and updated coverage of Cascading Style Sheets (CSS) and the Document Object Model (DOM); and fully covers modern JavaScript concepts, principles, and programming techniques. Thousands of Web developers, administrators, and power users have relied on JavaScript by Example to become expert JavaScript programmers. With this new edition, you can, too—even if you’re completely new to JavaScript. After you’ve become an expert, you’ll turn to this book constantly as the best source for trustworthy answers, solutions, and code.", "isbn": "0137084765", "pages": 936, "image": "http://books.google.com/books/content?id=zyMUnspbsekC&printsec=frontcover&img=1&zoom=2&edge=curl&source=gbs_api" }] };
+	    return _this;
+	  }
+
+	  _createClass(Grid, [{
+	    key: "render",
+	    value: function render() {
+	      var books = this.state.data.map(function (book, index) {
+	        return React.createElement(
+	          "div",
+	          { className: "book-entry", key: index },
+	          React.createElement("img", { className: "book-image", src: book.image, alt: book.title }),
+	          React.createElement(
+	            "p",
+	            null,
+	            React.createElement(
+	              "b",
+	              null,
+	              book.title
+	            )
+	          ),
+	          React.createElement(
+	            "p",
+	            null,
+	            React.createElement(
+	              "i",
+	              null,
+	              book.authors
+	            )
+	          )
+	        );
+	      });
+	      return React.createElement(
+	        "div",
+	        { className: "grid-container" },
+	        books
+	      );
+	    }
+	  }]);
+
+	  return Grid;
+	}(React.Component);
+
+	exports.default = Grid;
+
+/***/ },
+/* 235 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Search = function (_React$Component) {
+	  _inherits(Search, _React$Component);
+
+	  function Search() {
+	    _classCallCheck(this, Search);
+
+	    return _possibleConstructorReturn(this, (Search.__proto__ || Object.getPrototypeOf(Search)).apply(this, arguments));
+	  }
+
+	  _createClass(Search, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(
+	        "h1",
+	        null,
+	        "Search View"
+	      );
+	    }
+	  }]);
+
+	  return Search;
+	}(React.Component);
+
+	exports.default = Search;
+
+/***/ },
+/* 236 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Settings = function (_React$Component) {
+	  _inherits(Settings, _React$Component);
+
+	  function Settings() {
+	    _classCallCheck(this, Settings);
+
+	    return _possibleConstructorReturn(this, (Settings.__proto__ || Object.getPrototypeOf(Settings)).apply(this, arguments));
+	  }
+
+	  _createClass(Settings, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(
+	        "h1",
+	        null,
+	        "Settings View"
+	      );
+	    }
+	  }]);
+
+	  return Settings;
+	}(React.Component);
+
+	exports.default = Settings;
+
+/***/ },
+/* 237 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(235);
+	var content = __webpack_require__(238);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(238)(content, {});
+	var update = __webpack_require__(241)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -26633,16 +27066,16 @@
 	}
 
 /***/ },
-/* 235 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(236);
+	var content = __webpack_require__(239);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(238)(content, {});
+	var update = __webpack_require__(241)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -26659,21 +27092,21 @@
 	}
 
 /***/ },
-/* 236 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(237)();
+	exports = module.exports = __webpack_require__(240)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: \"Open Sans\", sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  color: #212121;\n  letter-spacing: 0.05em;\n}\n\n.main-container {\n  display: flex;\n  display: -webkit-flex;\n  min-height: 100vh;\n  flex-direction: column;\n}\n\n.main-body {\n  display: flex;\n  display: -webkit-flex;\n  flex: 1;\n  -webkit-flex: 1;\n}\n\n.header-container {\n  display: flex;\n  display: -webkit-flex;\n  align-items: center;\n  -webkit-align-items: center;\n  justify-content: center;\n  -webkit-justify-content: center;\n  padding: 1.5em;\n  background-color: #f4f6f8;\n}\n\n.header-left {\n  flex: 1;\n  -webkit-flex: 1;\n  display: flex;\n  display: -webkit-flex;\n  align-items: baseline;\n  -webkit-align-items: baseline;\n}\n\n.header-title {\n  font-size: 1.75em;\n  margin: 0 0 0.1em 0;\n}\n\n.header-title > a {\n  font-weight: 300;\n  color: inherit;\n  text-decoration: none;\n}\n\n.header-text {\n  font-weight: 300;\n  color: #424242;\n  margin:0 0 0 1em;\n  font-size: 0.9em;\n}\n\n.header-right {\n  flex: 1;\n  -webkit-flex: 1;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: flex-end;\n  -webkit-justify-content: flex-end;\n}\n\n.header-button-middle {\n  margin-right: 1em;\n  padding: 0.5em 1.5em;\n  color: #ffffff;\n  text-decoration: none;\n  background-color: #5D4037;\n}\n\n.header-button-right {\n  margin-right: 1em;\n  padding: 0.5em 1.5em;\n  color: #ffffff;\n  text-decoration: none;\n  background-color: #00C853;\n}\n\n.footer-container {\n  background-color: #e4e6e8;\n}\n\n.footer-container > p {\n  font-weight: 300;\n  text-align: center;\n  margin: 0;\n  padding: 1em;\n}\n", ""]);
+	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: \"Open Sans\", sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  color: #212121;\n  letter-spacing: 0.05em;\n}\n\nh1, h2, h3, p, input {\n  font-weight: 300;\n}\n\nbutton {\n  cursor: pointer;\n}\n\n.main-container {\n  display: flex;\n  display: -webkit-flex;\n  min-height: 100vh;\n  flex-direction: column;\n}\n\n.main-body {\n  display: flex;\n  display: -webkit-flex;\n  flex: 1;\n  -webkit-flex: 1;\n}\n\n/* Header */\n\n.header-container {\n  display: flex;\n  display: -webkit-flex;\n  align-items: center;\n  -webkit-align-items: center;\n  justify-content: center;\n  -webkit-justify-content: center;\n  padding: 1.5em;\n  background-color: #f4f6f8;\n}\n\n.header-left {\n  flex: 1;\n  -webkit-flex: 1;\n  display: flex;\n  display: -webkit-flex;\n  align-items: baseline;\n  -webkit-align-items: baseline;\n}\n\n.header-title {\n  font-size: 1.75em;\n  margin: 0 0 0.1em 0;\n}\n\n.header-title > a {\n  font-weight: 300;\n  color: inherit;\n  text-decoration: none;\n}\n\n.header-text {\n  color: #424242;\n  margin:0 0 0 1em;\n  font-size: 0.9em;\n}\n\n.header-right {\n  flex: 1;\n  -webkit-flex: 1;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: flex-end;\n  -webkit-justify-content: flex-end;\n}\n\n.header-button-middle {\n  font-size: 0.9em;\n  margin-right: 1em;\n  padding: 0.5em 1.5em;\n  color: #ffffff;\n  text-decoration: none;\n  background-color: #311b92;\n  border-radius: 2px;\n}\n\n.header-button-right {\n  font-size: 0.9em;\n  margin-right: 1em;\n  padding: 0.5em 1.5em;\n  color: #ffffff;\n  text-decoration: none;\n  background-color: #ff3d00;\n  border-radius: 2px;\n}\n\n/* Footer */\n\n.footer-container {\n  background-color: #e4e6e8;\n}\n\n.footer-container > p {\n  text-align: center;\n  margin: 0;\n  padding: 1em;\n}\n\n/* Account View */\n\n.account-container {\n  margin: 0 auto;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  align-items: center;\n  -webkit-align-items: center;\n}\n\n.form-container {\n  flex: 1;\n  -webkit-flex: 1;\n}\n\n.form-input {\n  color: inherit;\n  width: 15em;\n  font-size: 1em;\n  padding: 0.3em 0.2em;\n  outline: none;\n}\n\n.form-button {\n  margin-left: 1em;\n  font-size: 0.9em;\n  padding: 0.5em 1.5em;\n  color: #ffffff;\n  background-color: #01579b;\n  border: none;\n  border-radius: 2px;\n}\n\n.delete-button {\n  margin-left: 1em;\n  font-size: 0.9em;\n  padding: 0.5em 1.5em;\n  color: #ffffff;\n  background-color: #b71c1c;\n  border: none;\n  border-radius: 2px;\n}\n\n.grid-container {\n  width: 60em;\n  display: flex;\n  display: -webkit-flex;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n}\n\n.book-entry {\n  flex: 0 0 20%;\n  -webkit-flex: 0 0 20%;\n  padding: 0 1em;\n  text-align: center;\n}\n\n.book-image {\n  margin-top: 1em;\n  width: calc(48em / 5);\n  border: 1px solid #cccccc;\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 237 */
+/* 240 */
 /***/ function(module, exports) {
 
 	/*
@@ -26729,7 +27162,7 @@
 
 
 /***/ },
-/* 238 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*

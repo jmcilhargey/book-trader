@@ -1,6 +1,7 @@
 "use strict";
 
 import * as React from "react";
+import { Link } from "react-router";
 
 class Header extends React.Component {
   render() {
@@ -9,18 +10,18 @@ class Header extends React.Component {
         <div className="header-container">
           <div className="header-left">
             <h1 className="header-title">
-              <a href="/">Book Trader</a>
+              <Link to="/">Book Trader</Link>
             </h1>
             <h3 className="header-text">Trade, share, learn</h3>
           </div>
           <div className="header-middle">
-            <a className="header-button-middle" href="/search">Browse Books</a>
-            <a className="header-button-middle" href="/account">My Books</a>
+            <Link className="header-button-middle" to="/search">Browse Books</Link>
+            <Link className="header-button-middle" to="/account">My Books</Link>
           </div>
           <div className="header-right">
-            <a className="header-button-right" href="/register">Register</a>
-            <a className="header-button-right" href="/login">Login</a>
-            <a className="header-button-right" href="/settings">Settings</a>
+            <Link className="header-button-right" to="/register">Register</Link>
+            <Link className="header-button-right" to="/login">Login</Link>
+            <Link className="header-button-right" to="/settings">Settings</Link>
           </div>
         </div>
       </header>
