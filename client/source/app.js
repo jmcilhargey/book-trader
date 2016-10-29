@@ -1,5 +1,6 @@
 "use strict";
 
+import "babel-polyfill";
 import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Router, Route, hashHistory } from "react-router";
@@ -14,14 +15,13 @@ import Settings from "./views/settings";
 import "style!./main.css";
 
 ReactDOM.render(
-      (
-      <Router history={ hashHistory }>
-          <Route path="/" component={ App } >
-            <Route path="/search" component={ Search } ></Route>
-            <Route path="/register" component={ Register } ></Route>
-            <Route path="/login" component={ Login } ></Route>
-            <Route path="/account" component={ Account } ></Route>
-            <Route path="/settings" component={ Settings } ></Route>
-          </Route>
-      </Router>
-      ), document.getElementById("app"));
+    <Router history={ hashHistory }>
+        <Route path="/" component={ App } >
+          <Route path="/search" component={ Search } ></Route>
+          <Route path="/register" component={ Register } ></Route>
+          <Route path="/login" component={ Login } ></Route>
+          <Route path="/account" component={ Account } ></Route>
+          <Route path="/settings" component={ Settings } ></Route>
+        </Route>
+    </Router>
+    , document.getElementById("app"));

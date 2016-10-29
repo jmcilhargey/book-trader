@@ -1,25 +1,25 @@
 "use strict";
 
-const routes = require("express").Router();
+const router = require("express").Router();
 const books = require("../apis/books");
 const transform = require("../helpers/transform");
 
-routes.post("/books", (req, res) => {
-
-  req.on("data", (data) => {
-    console.log(data);
-  });
+router.post("/books", (req, res) => {
 
   books.get(req.body.search).then((value) => {
     res.status(200).send(transform(value));
-
   }).catch((reason) => {
     console.log(reason);
   })
 });
 
-routes.get("/user", (req, res) => {
+router.route("/user")
+  .get((req, res) => {
   res.send("User route");
+})
+  .post((req, res) => {
+  console.log(req.body);
+  res.send({ message: ["Success, welcome to Book Trader " + req.body.first + "!"] });
 });
 
-module.exports = routes;
+module.exports = router;

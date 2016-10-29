@@ -1,8 +1,9 @@
 "use strict";
 
 import * as React from "react";
+import fetch from "isomorphic-fetch";
 
-class Form extends React.Component {
+class SearchForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = { value: "" };
@@ -11,29 +12,13 @@ class Form extends React.Component {
     this.handleDelete = this.handleDelete.bind(this);
   }
   handleChange(event) {
-    this.setState({ value: event.target.value.substr(0, 140) });
+    this.setState({ value: event.target.value });
   }
   handleDelete(event) {
     alert("This would delete a book");
   }
   handleSubmit(event) {
-
-    var xmlhttp = new XMLHttpRequest();
-
-    xmlhttp.onreadystatechange = () => {
-      if (xmlhttp.readyState === 4) {
-        var response = JSON.parse(xmlhttp.responseText);
-        console.log(response)
-        if (xmlhttp.status === 200 && response === "OK") {
-          console.log("OK");
-        } else {
-          console.log("ERROR");
-        }
-      }
-    }
-    xmlhttp.open("POST", "api/books", true);
-    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-    xmlhttp.send("search=" + this.state.value);
+    this.props.onChange(this.state.value.trim());
   }
   render() {
     return (
@@ -43,7 +28,7 @@ class Form extends React.Component {
           value={ this.state.value }
           onChange={ this.handleChange } />
         <button className="form-button"
-          onClick={ this.handleSubmit }>Add Book</button>
+          onClick={ this.handleSubmit }>Find Book</button>
         <button className="delete-button"
           onClick={ this.handleDelete }>Remove Book</button>
       </div>
@@ -51,4 +36,4 @@ class Form extends React.Component {
   }
 }
 
-export default Form
+export default SearchForm

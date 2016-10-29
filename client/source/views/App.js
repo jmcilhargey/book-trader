@@ -1,8 +1,8 @@
 "use strict";
 
 import * as React from "react";
-import Header from "./header";
-import Footer from "./footer";
+import Header from "../components/header";
+import Footer from "../components/footer";
 
 class App extends React.Component {
   render() {
@@ -16,7 +16,6 @@ class App extends React.Component {
     </div>
     );
   }
-
 }
 
 export default App

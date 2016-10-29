@@ -1,10 +1,16 @@
 "use strict";
 
 import * as React from "react";
+import LoginForm from "../components/loginform";
 
 class Login extends React.Component {
   render() {
-    return <h1>Login View</h1>
+    return (
+      <div className="login-container">
+        <h1>Sign In</h1>
+        <LoginForm />
+      </div>
+    );
   }
 }
 
