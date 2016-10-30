@@ -5,41 +5,46 @@ const mongoose = require("mongoose");
 const path = require("path");
 const router = require("./routes/index");
 const session = require("express-session");
-
-const Library = require("./data/library");
-const User = require("./data/user");
+const RedisStore = require("connect-redis")(session);
+const cookieParser = require("cookie-parser");
 
 const app = express();
 const bodyParser = require("body-parser");
 
-mongoose.connect(process.env.MONGO_URI || "mongodb://localhost/test", (err, res) => {
-  if (err) {
-    console.log(err);
+mongoose.Promise = global.Promise;
+mongoose.connect(process.env.MONGO_URI || "mongodb://localhost/test", (error, res) => {
+  if (error) {
+    console.log(error);
   } else {
     console.log("Connected to MongoDB");
   }
 });
 
-app.use(express.static(path.join(__dirname + "/../client/build")));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
 app.use(session({
+  store: new RedisStore(),
   secret: process.env.SESSION_SECRET,
-  resave: false,
+  resave: true,
   saveUninitialized: false,
   cookie: { path: "/", secure: false, maxAge: null, httpOnly: true }
 }));
 app.use((req, res, next) => {
-
-});
-app.use("/api", router);
-
-app.get("/*", (req, res) => {
-  res.sendFile(path.join(__dirname, "index.html"))
+  res.locals.currentUser = req.session.userId;
+  next();
 });
 
-app.listen(process.env.PORT || 3000, (err) => {
-  if (err) {
-    console.log(err);
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname + "/../client/build")));
+app.use("/", router);
+
+app.use((error, req, res, next) => {
+  error.status = error.status || 500;
+  res.send({ error: error.status, message: error.message });
+})
+
+app.listen(process.env.PORT || 3000, (error) => {
+  if (error) {
+    console.log(error);
   } else {
     console.log("Express server listening");
   }

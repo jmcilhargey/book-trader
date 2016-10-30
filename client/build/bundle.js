@@ -90,7 +90,7 @@
 
 	ReactDOM.render(React.createElement(
 	    _reactRouter.Router,
-	    { history: _reactRouter.hashHistory },
+	    { history: _reactRouter.browserHistory },
 	    React.createElement(
 	        _reactRouter.Route,
 	        { path: "/", component: _app2.default },
@@ -34591,7 +34591,7 @@
 
 	    var _this = _possibleConstructorReturn(this, (Register.__proto__ || Object.getPrototypeOf(Register)).call(this));
 
-	    _this.state = { first: "", last: "", email: "", password: "", errors: [], success: [] };
+	    _this.state = { first: "", last: "", email: "", password: "", confirm: "", errors: [], success: [] };
 	    _this.handleNewUser = _this.handleNewUser.bind(_this);
 	    _this.handleError = _this.handleError.bind(_this);
 	    _this.handleFirstNameChange = _this.handleFirstNameChange.bind(_this);
@@ -34605,7 +34605,6 @@
 	  _createClass(Register, [{
 	    key: "handleFirstNameChange",
 	    value: function handleFirstNameChange(value) {
-	      console.log(this.state);
 	      this.setState({ first: value });
 	    }
 	  }, {
@@ -34633,19 +34632,19 @@
 	    value: function handleNewUser() {
 	      var _this2 = this;
 
-	      (0, _isomorphicFetch2.default)("api/user", {
+	      (0, _isomorphicFetch2.default)("api/register", {
 	        method: "POST",
 	        headers: {
 	          "Accept": "application/json",
 	          "Content-Type": "application/x-www-form-urlencoded"
 	        },
-	        body: "first=" + this.state.first + "&last=" + this.state.last + "&email=" + this.state.email + "&password=" + this.state.password
+	        body: "first=" + this.state.first + "&last=" + this.state.last + "&email=" + this.state.email + "&password=" + this.state.password + "&confirm=" + this.state.confirm
 	      }).then(function (response) {
 	        return response.json();
 	      }).then(function (json) {
 	        return _this2.setState({ success: json.message || [] });
 	      });
-	      this.setState({ first: "", last: "", email: "", password: "", errors: [], success: [] });
+	      this.setState({ first: "", last: "", email: "", password: "", confirm: "", errors: [], success: [] });
 	    }
 	  }, {
 	    key: "handleError",
@@ -34671,7 +34670,9 @@
 	          onConfirmChange: this.handleConfirmChange,
 	          onSubmit: this.handleNewUser,
 	          onError: this.handleError,
-	          values: this.state }),
+	          email: this.state.email,
+	          password: this.state.password,
+	          confirm: this.state.confirm }),
 	        React.createElement(_errormessage2.default, { errors: this.state.errors }),
 	        React.createElement(_successmessage2.default, { success: this.state.success })
 	      );
@@ -35207,13 +35208,13 @@
 
 	      var errors = [];
 
-	      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.props.values.email)) {
+	      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.props.email)) {
 	        errors.push("Invalid email address");
 	      }
-	      if (!/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/.test(this.props.values.password)) {
+	      if (!/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/.test(this.props.password)) {
 	        errors.push("Password must be 7 or more characters, contain a digit, and a special character");
 	      }
-	      if (this.props.values.password !== this.props.values.confirm) {
+	      if (this.props.password !== this.props.confirm) {
 	        errors.push("Passwords don't match");
 	      }
 	      if (errors.length) {
@@ -35411,6 +35412,14 @@
 
 	var _loginform2 = _interopRequireDefault(_loginform);
 
+	var _errormessage = __webpack_require__(530);
+
+	var _errormessage2 = _interopRequireDefault(_errormessage);
+
+	var _successmessage = __webpack_require__(531);
+
+	var _successmessage2 = _interopRequireDefault(_successmessage);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
@@ -35427,10 +35436,52 @@
 	  function Login() {
 	    _classCallCheck(this, Login);
 
-	    return _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this));
+
+	    _this.state = { email: "", password: "", errors: [], success: [] };
+	    _this.handleEmailChange = _this.handleEmailChange.bind(_this);
+	    _this.handlePasswordChange = _this.handlePasswordChange.bind(_this);
+	    _this.handleLogin = _this.handleLogin.bind(_this);
+	    _this.handleError = _this.handleError.bind(_this);
+	    return _this;
 	  }
 
 	  _createClass(Login, [{
+	    key: "handleEmailChange",
+	    value: function handleEmailChange(value) {
+	      this.setState({ email: value });
+	    }
+	  }, {
+	    key: "handlePasswordChange",
+	    value: function handlePasswordChange(value) {
+	      this.setState({ password: value });
+	    }
+	  }, {
+	    key: "handleLogin",
+	    value: function handleLogin() {
+	      var _this2 = this;
+
+	      fetch("api/login", {
+	        method: "POST",
+	        headers: {
+	          "Accept": "application/json",
+	          "Content-Type": "application/x-www-form-urlencoded"
+	        },
+	        body: "email=" + this.state.email + "&password=" + this.state.password
+	      }).then(function (response) {
+	        return response.json();
+	      }).then(function (json) {
+	        return _this2.setState({ success: json.message || [] });
+	      });
+	      this.setState({ email: "", password: "" });
+	      console.log(this.state);
+	    }
+	  }, {
+	    key: "handleError",
+	    value: function handleError(value) {
+	      this.setState({ errors: value || [] });
+	    }
+	  }, {
 	    key: "render",
 	    value: function render() {
 	      return React.createElement(
@@ -35441,7 +35492,15 @@
 	          null,
 	          "Sign In"
 	        ),
-	        React.createElement(_loginform2.default, null)
+	        React.createElement(_loginform2.default, {
+	          onSubmit: this.handleLogin,
+	          onEmailChange: this.handleEmailChange,
+	          onPasswordChange: this.handlePasswordChange,
+	          onError: this.handleError,
+	          email: this.state.email,
+	          password: this.state.password }),
+	        React.createElement(_errormessage2.default, { errors: this.state.errors }),
+	        React.createElement(_successmessage2.default, { success: this.state.success })
 	      );
 	    }
 	  }]);
@@ -35486,18 +35545,43 @@
 	    _this.onSubmit = _this.onSubmit.bind(_this);
 	    _this.onEmailChange = _this.onEmailChange.bind(_this);
 	    _this.onPasswordChange = _this.onPasswordChange.bind(_this);
+	    _this.isValidSubmit = _this.isValidSubmit.bind(_this);
 	    return _this;
 	  }
 
 	  _createClass(LoginForm, [{
+	    key: "isValidSubmit",
+	    value: function isValidSubmit() {
+	      var errors = [];
+
+	      if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.props.email)) {
+	        errors.push("Invalid email address");
+	      }
+	      if (errors.length) {
+	        this.props.onError(errors);
+	        return false;
+	      } else {
+	        this.props.onError();
+	        return true;
+	      }
+	    }
+	  }, {
 	    key: "onSubmit",
-	    value: function onSubmit() {}
+	    value: function onSubmit() {
+	      if (this.isValidSubmit()) {
+	        this.props.onSubmit();
+	      }
+	    }
 	  }, {
 	    key: "onEmailChange",
-	    value: function onEmailChange() {}
+	    value: function onEmailChange(event) {
+	      this.props.onEmailChange(event.target.value);
+	    }
 	  }, {
 	    key: "onPasswordChange",
-	    value: function onPasswordChange() {}
+	    value: function onPasswordChange(event) {
+	      this.props.onPasswordChange(event.target.value);
+	    }
 	  }, {
 	    key: "render",
 	    value: function render() {

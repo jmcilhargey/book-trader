@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const bcrypt = require("bcrypt");
 const Schema = mongoose.Schema;
 
-const User = new Schema({
+const UserSchema = new Schema({
   email: {
     type: String,
     unique: true,
@@ -27,7 +27,7 @@ const User = new Schema({
   trades: Array
 });
 
-User.statics.authenticate = (email, password, callback) => {
+UserSchema.statics.authenticate = (email, password, callback) => {
   User.findOne({ email: email })
     .exec((error, user) => {
       if (error) {
@@ -50,7 +50,7 @@ User.statics.authenticate = (email, password, callback) => {
     });
 };
 
-User.pre("save", function(next) {
+UserSchema.pre("save", function(next) {
 
   const user = this;
 
@@ -65,4 +65,6 @@ User.pre("save", function(next) {
   });
 });
 
-module.exports = mongoose.model("User", User);
+const User = mongoose.model("User", UserSchema);
+
+module.exports = User;

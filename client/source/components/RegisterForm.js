@@ -32,13 +32,13 @@ class RegisterForm extends React.Component {
 
     const errors = [];
 
-    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.props.values.email)) {
+    if (!/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(this.props.email)) {
       errors.push("Invalid email address");
     }
-    if (!/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/.test(this.props.values.password)) {
+    if (!/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{7,15}$/.test(this.props.password)) {
       errors.push("Password must be 7 or more characters, contain a digit, and a special character");
     }
-    if (this.props.values.password !== this.props.values.confirm) {
+    if (this.props.password !== this.props.confirm) {
       errors.push("Passwords don't match");
     }
     if (errors.length) {
