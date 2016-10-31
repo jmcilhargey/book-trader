@@ -34,13 +34,13 @@ class Register extends React.Component {
     this.setState({ confirm: value });
   }
   handleNewUser() {
-
-    fetch("api/register", {
+    fetch("/api/register", {
       method: "POST",
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded"
       },
+      credentials: "same-origin",
       body: `first=${ this.state.first }&last=${ this.state.last }&email=${ this.state.email }&password=${ this.state.password }&confirm=${ this.state.confirm }`
     }).then((response) => response.json())
       .then((json) => this.setState({ success: json.message || [] }))

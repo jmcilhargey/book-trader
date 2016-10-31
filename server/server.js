@@ -1,12 +1,12 @@
 "use strict";
 
+require("../env");
+
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
-const router = require("./routes/index");
-const session = require("express-session");
-const RedisStore = require("connect-redis")(session);
-const cookieParser = require("cookie-parser");
+const routes = require("./routes");
+const mid = require("./middleware");
 
 const app = express();
 const bodyParser = require("body-parser");
@@ -20,22 +20,16 @@ mongoose.connect(process.env.MONGO_URI || "mongodb://localhost/test", (error, re
   }
 });
 
-app.use(cookieParser());
-app.use(session({
-  store: new RedisStore(),
-  secret: process.env.SESSION_SECRET,
-  resave: true,
-  saveUninitialized: false,
-  cookie: { path: "/", secure: false, maxAge: null, httpOnly: true }
-}));
-app.use((req, res, next) => {
-  res.locals.currentUser = req.session.userId;
-  next();
-});
-
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname + "/../client/build")));
-app.use("/", router);
+
+app.use("/api", routes);
+
+app.use((req, res, next) => {
+  let error = new Error("Page not found");
+  error.status = 404;
+  next(error);
+});
 
 app.use((error, req, res, next) => {
   error.status = error.status || 500;

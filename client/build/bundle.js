@@ -82,7 +82,7 @@
 
 	var _settings2 = _interopRequireDefault(_settings);
 
-	__webpack_require__(539);
+	__webpack_require__(540);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -34353,20 +34353,40 @@
 	  function App() {
 	    _classCallCheck(this, App);
 
-	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this));
+
+	    _this.state = { token: "", auth: false };
+	    _this.updateAuth = _this.updateAuth.bind(_this);
+	    _this.componentWillMount = _this.componentWillMount.bind(_this);
+	    return _this;
 	  }
 
 	  _createClass(App, [{
+	    key: "componentWillMount",
+	    value: function componentWillMount() {
+	      if (localStorage.token) {
+	        this.setState({ auth: true });
+	      }
+	    }
+	  }, {
+	    key: "updateAuth",
+	    value: function updateAuth(token) {
+	      localStorage.token = token;
+	      this.setState({ token: token, auth: true });
+	    }
+	  }, {
 	    key: "render",
 	    value: function render() {
 	      return React.createElement(
 	        "div",
 	        { className: "main-container" },
-	        React.createElement(_header2.default, null),
+	        React.createElement(_header2.default, { auth: this.state.auth }),
 	        React.createElement(
 	          "div",
 	          { className: "main-body" },
-	          this.props.children
+	          this.props.children && React.cloneElement(this.props.children, {
+	            onAuth: this.updateAuth
+	          })
 	        ),
 	        React.createElement(_footer2.default, null)
 	      );
@@ -34395,6 +34415,12 @@
 	var React = _interopRequireWildcard(_react);
 
 	var _reactRouter = __webpack_require__(468);
+
+	var _headerbuttons = __webpack_require__(545);
+
+	var _headerbuttons2 = _interopRequireDefault(_headerbuttons);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
@@ -34454,25 +34480,7 @@
 	              "My Books"
 	            )
 	          ),
-	          React.createElement(
-	            "div",
-	            { className: "header-right" },
-	            React.createElement(
-	              _reactRouter.Link,
-	              { className: "header-button-right", to: "/register" },
-	              "Sign Up"
-	            ),
-	            React.createElement(
-	              _reactRouter.Link,
-	              { className: "header-button-right", to: "/login" },
-	              "Sign In"
-	            ),
-	            React.createElement(
-	              _reactRouter.Link,
-	              { className: "header-button-right", to: "/settings" },
-	              "Settings"
-	            )
-	          )
+	          React.createElement(_headerbuttons2.default, { auth: this.props.auth })
 	        )
 	      );
 	    }
@@ -34632,12 +34640,13 @@
 	    value: function handleNewUser() {
 	      var _this2 = this;
 
-	      (0, _isomorphicFetch2.default)("api/register", {
+	      (0, _isomorphicFetch2.default)("/api/register", {
 	        method: "POST",
 	        headers: {
 	          "Accept": "application/json",
 	          "Content-Type": "application/x-www-form-urlencoded"
 	        },
+	        credentials: "same-origin",
 	        body: "first=" + this.state.first + "&last=" + this.state.last + "&email=" + this.state.email + "&password=" + this.state.password + "&confirm=" + this.state.confirm
 	      }).then(function (response) {
 	        return response.json();
@@ -35227,13 +35236,22 @@
 	    }
 	  }, {
 	    key: "onSubmit",
-	    value: function onSubmit(event) {
-	      event.preventDefault();
-
-	      if (this.isValidSubmit()) {
-	        this.props.onSubmit();
+	    value: function (_onSubmit) {
+	      function onSubmit(_x) {
+	        return _onSubmit.apply(this, arguments);
 	      }
-	    }
+
+	      onSubmit.toString = function () {
+	        return _onSubmit.toString();
+	      };
+
+	      return onSubmit;
+	    }(function (event) {
+	      event.preventDefault();
+	      if (this.isValidSubmit()) {
+	        onSubmit();
+	      }
+	    })
 	  }, {
 	    key: "render",
 	    value: function render() {
@@ -35408,6 +35426,10 @@
 
 	var React = _interopRequireWildcard(_react);
 
+	var _isomorphicFetch = __webpack_require__(527);
+
+	var _isomorphicFetch2 = _interopRequireDefault(_isomorphicFetch);
+
 	var _loginform = __webpack_require__(533);
 
 	var _loginform2 = _interopRequireDefault(_loginform);
@@ -35461,20 +35483,20 @@
 	    value: function handleLogin() {
 	      var _this2 = this;
 
-	      fetch("api/login", {
+	      (0, _isomorphicFetch2.default)("/api/login", {
 	        method: "POST",
 	        headers: {
 	          "Accept": "application/json",
 	          "Content-Type": "application/x-www-form-urlencoded"
 	        },
+	        credentials: "same-origin",
 	        body: "email=" + this.state.email + "&password=" + this.state.password
 	      }).then(function (response) {
 	        return response.json();
 	      }).then(function (json) {
-	        return _this2.setState({ success: json.message || [] });
+	        _this2.setState({ success: json.message || [] });
+	        _this2.props.onAuth(json.token);
 	      });
-	      this.setState({ email: "", password: "" });
-	      console.log(this.state);
 	    }
 	  }, {
 	    key: "handleError",
@@ -35567,7 +35589,8 @@
 	    }
 	  }, {
 	    key: "onSubmit",
-	    value: function onSubmit() {
+	    value: function onSubmit(event) {
+	      event.preventDefault();
 	      if (this.isValidSubmit()) {
 	        this.props.onSubmit();
 	      }
@@ -35669,13 +35692,13 @@
 	      if (!value.length) {
 	        return;
 	      }
-
-	      (0, _isomorphicFetch2.default)("api/books", {
+	      (0, _isomorphicFetch2.default)("/api/books", {
 	        method: "POST",
 	        headers: {
 	          "Accept": "application/json",
 	          "Content-Type": "application/x-www-form-urlencoded"
 	        },
+	        credentials: "same-origin",
 	        body: "search=" + value
 	      }).then(function (response) {
 	        return response.json();
@@ -35686,6 +35709,7 @@
 	  }, {
 	    key: "render",
 	    value: function render() {
+	      console.log(localStorage);
 	      var search = this.state.search;
 	      var books = this.state.books;
 	      return React.createElement(
@@ -35943,6 +35967,12 @@
 
 	var React = _interopRequireWildcard(_react);
 
+	var _userinfo = __webpack_require__(539);
+
+	var _userinfo2 = _interopRequireDefault(_userinfo);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -35957,16 +35987,24 @@
 	  function Settings() {
 	    _classCallCheck(this, Settings);
 
-	    return _possibleConstructorReturn(this, (Settings.__proto__ || Object.getPrototypeOf(Settings)).apply(this, arguments));
+	    var _this = _possibleConstructorReturn(this, (Settings.__proto__ || Object.getPrototypeOf(Settings)).call(this));
+
+	    _this.state = { first: "", last: "", email: "", books: [] };
+	    return _this;
 	  }
 
 	  _createClass(Settings, [{
 	    key: "render",
 	    value: function render() {
 	      return React.createElement(
-	        "h1",
-	        null,
-	        "Settings View"
+	        "div",
+	        { className: "settings-container" },
+	        React.createElement(
+	          "h1",
+	          null,
+	          "My Settings"
+	        ),
+	        React.createElement(_userinfo2.default, null)
 	      );
 	    }
 	  }]);
@@ -35980,13 +36018,85 @@
 /* 539 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(298);
+
+	var React = _interopRequireWildcard(_react);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var UserInfo = function (_React$Component) {
+	  _inherits(UserInfo, _React$Component);
+
+	  function UserInfo(props) {
+	    _classCallCheck(this, UserInfo);
+
+	    return _possibleConstructorReturn(this, (UserInfo.__proto__ || Object.getPrototypeOf(UserInfo)).call(this, props));
+	  }
+
+	  _createClass(UserInfo, [{
+	    key: "render",
+	    value: function render() {
+	      return React.createElement(
+	        "div",
+	        { className: "user-info" },
+	        React.createElement(
+	          "p",
+	          null,
+	          "First Name ",
+	          this.props.first
+	        ),
+	        React.createElement(
+	          "p",
+	          null,
+	          "Last Name ",
+	          this.props.last
+	        ),
+	        React.createElement(
+	          "p",
+	          null,
+	          "Email ",
+	          this.props.email
+	        ),
+	        React.createElement(
+	          "p",
+	          null,
+	          "Books ",
+	          this.props.books
+	        )
+	      );
+	    }
+	  }]);
+
+	  return UserInfo;
+	}(React.Component);
+
+	exports.default = UserInfo;
+
+/***/ },
+/* 540 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(540);
+	var content = __webpack_require__(541);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(543)(content, {});
+	var update = __webpack_require__(544)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -36003,16 +36113,16 @@
 	}
 
 /***/ },
-/* 540 */
+/* 541 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(541);
+	var content = __webpack_require__(542);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(543)(content, {});
+	var update = __webpack_require__(544)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -36029,21 +36139,21 @@
 	}
 
 /***/ },
-/* 541 */
+/* 542 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(542)();
+	exports = module.exports = __webpack_require__(543)();
 	// imports
 
 
 	// module
-	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: \"Open Sans\", sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  color: #212121;\n  letter-spacing: 0.05em;\n}\n\nh1, h2, h3, p, input {\n  font-weight: 300;\n}\n\na, button {\n  opacity: 0.8;\n  cursor: pointer;\n  transition: all 0.25s;\n  -webkit-transition: all 0.25s;\n  border-radius: 2px;\n}\n\ninput:focus, button:focus {\n  outline: none;\n}\n\na:hover, button:hover {\n  opacity: 1;\n}\n\n.main-container {\n  display: flex;\n  display: -webkit-flex;\n  min-height: 100vh;\n  flex-direction: column;\n}\n\n.main-body {\n  display: flex;\n  display: -webkit-flex;\n  flex: 1;\n  -webkit-flex: 1;\n}\n\n/* Header */\n\n.header-container {\n  display: flex;\n  display: -webkit-flex;\n  align-items: center;\n  -webkit-align-items: center;\n  justify-content: center;\n  -webkit-justify-content: center;\n  margin-bottom: 1em;\n  padding: 1.5em;\n  background-color: #f4f6f8;\n}\n\n.header-left {\n  flex: 1;\n  -webkit-flex: 1;\n  display: flex;\n  display: -webkit-flex;\n  align-items: baseline;\n  -webkit-align-items: baseline;\n}\n\n.header-title {\n  font-size: 1.75em;\n  margin: 0 0 0.1em 0;\n}\n\n.header-title > a {\n  font-weight: 300;\n  color: inherit;\n  text-decoration: none;\n}\n\n.header-text {\n  color: #424242;\n  margin:0 0 0 1em;\n  font-size: 0.9em;\n}\n\n.header-right {\n  flex: 1;\n  -webkit-flex: 1;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: flex-end;\n  -webkit-justify-content: flex-end;\n}\n\n.header-button-middle {\n  font-size: 0.9em;\n  margin-right: 1em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  text-decoration: none;\n  background-color: #311b92;\n}\n\n.header-button-right {\n  font-size: 0.9em;\n  margin-right: 1em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  text-decoration: none;\n  background-color: #ff3d00;\n}\n\n/* Footer */\n\n.footer-container {\n  background-color: #e4e6e8;\n  margin-top: 1em;\n}\n\n.footer-container > p {\n  text-align: center;\n  margin: 0;\n  padding: 1em;\n}\n\n/* Account View */\n\n.account-container {\n  margin: 0 auto;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  align-items: center;\n  -webkit-align-items: center;\n}\n\n.form-container {\n  flex: 1;\n  -webkit-flex: 1;\n}\n\n.form-input {\n  color: inherit;\n  width: 15em;\n  font-size: 1em;\n  padding: 0.4em 0.2em;\n  outline: none;\n}\n\n.form-button {\n  margin-left: 1em;\n  font-size: 0.9em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  background-color: #02b875;\n  border: none;\n}\n\n.delete-button {\n  margin-left: 1em;\n  font-size: 0.9em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  background-color: #b71c1c;\n  border: none;\n}\n\n.grid-container {\n  width: 60em;\n  display: flex;\n  display: -webkit-flex;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n}\n\n.book-entry {\n  flex: 0 0 20%;\n  -webkit-flex: 0 0 20%;\n  padding: 0 1em;\n  text-align: center;\n}\n\n.book-image {\n  margin-top: 1em;\n  width: calc(48em / 5);\n  border: 1px solid #cccccc;\n}\n\n/* Register View */\n\n.register-container {\n  margin: 0 auto;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  align-items: center;\n  -webkit-align-items: center;\n}\n\n\n.register-form {\n  width: 15em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.register-input {\n  margin-bottom: 1em;\n  flex: 1;\n  -webkit-flex: 1;\n  color: inherit;\n  font-size: 1em;\n  padding: 0.4em 0.2em;\n  outline: none;\n}\n\n.register-submit {\n  margin: 1em 0;\n  opacity: 0.8;\n  cursor: pointer;\n  transition: all 0.25s;\n  -webkit-transition: all 0.25s;\n  border-radius: 2px;\n  font-size: 0.9em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  background-color: #02b875;\n  border: none;\n}\n\n.register-submit:hover {\n  opacity: 1;\n}\n\n.error-messages {\n  color: #ef5350;\n}\n\n.error-messages > p {\n  text-align: center;\n  margin: 0.5em 0;\n}\n\n.success-messages {\n  color: #02b875;\n}\n\n/* Login View */\n\n.login-container {\n  margin: 0 auto;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  align-items: center;\n  -webkit-align-items: center;\n}\n\n.login-form {\n  width: 15em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.login-input {\n  margin-bottom: 1em;\n  flex: 1;\n  -webkit-flex: 1;\n  color: inherit;\n  font-size: 1em;\n  padding: 0.4em 0.2em;\n  outline: none;\n}\n\n.login-submit {\n  margin: 1em 0;\n  opacity: 0.8;\n  cursor: pointer;\n  transition: all 0.25s;\n  -webkit-transition: all 0.25s;\n  border-radius: 2px;\n  font-size: 0.9em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  background-color: #02b875;\n  border: none;\n}\n", ""]);
+	exports.push([module.id, "* {\n  box-sizing: border-box;\n}\n\nbody {\n  margin: 0;\n  padding: 0;\n  font-family: \"Open Sans\", sans-serif;\n  -webkit-font-smoothing: antialiased;\n  -moz-osx-font-smoothing: grayscale;\n  color: #212121;\n  letter-spacing: 0.05em;\n}\n\nh1, h2, h3, p, input {\n  font-weight: 300;\n}\n\na, button {\n  opacity: 0.8;\n  cursor: pointer;\n  transition: all 0.25s;\n  -webkit-transition: all 0.25s;\n  border-radius: 2px;\n}\n\ninput:focus, button:focus {\n  outline: none;\n}\n\na:hover, button:hover {\n  opacity: 1;\n}\n\n.main-container {\n  display: flex;\n  display: -webkit-flex;\n  min-height: 100vh;\n  flex-direction: column;\n}\n\n.main-body {\n  display: flex;\n  display: -webkit-flex;\n  flex: 1;\n  -webkit-flex: 1;\n}\n\n/* Header */\n\n.header-container {\n  display: flex;\n  display: -webkit-flex;\n  align-items: center;\n  -webkit-align-items: center;\n  justify-content: center;\n  -webkit-justify-content: center;\n  margin-bottom: 1em;\n  padding: 1.5em;\n  background-color: #f4f6f8;\n}\n\n.header-left {\n  flex: 1;\n  -webkit-flex: 1;\n  display: flex;\n  display: -webkit-flex;\n  align-items: baseline;\n  -webkit-align-items: baseline;\n}\n\n.header-title {\n  font-size: 1.75em;\n  margin: 0 0 0.1em 0;\n}\n\n.header-title > a {\n  font-weight: 300;\n  color: inherit;\n  text-decoration: none;\n}\n\n.header-text {\n  color: #424242;\n  margin:0 0 0 1em;\n  font-size: 0.9em;\n}\n\n.header-right {\n  flex: 1;\n  -webkit-flex: 1;\n  display: flex;\n  display: -webkit-flex;\n  justify-content: flex-end;\n  -webkit-justify-content: flex-end;\n}\n\n.header-button-middle {\n  font-size: 0.9em;\n  margin-right: 1em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  text-decoration: none;\n  background-color: #311b92;\n}\n\n.header-button-right {\n  font-size: 0.9em;\n  margin-right: 1em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  text-decoration: none;\n  background-color: #ff3d00;\n}\n\n/* Footer */\n\n.footer-container {\n  background-color: #e4e6e8;\n  margin-top: 1em;\n}\n\n.footer-container > p {\n  text-align: center;\n  margin: 0;\n  padding: 1em;\n}\n\n/* Account View */\n\n.account-container {\n  margin: 0 auto;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  align-items: center;\n  -webkit-align-items: center;\n}\n\n.form-container {\n  flex: 1;\n  -webkit-flex: 1;\n}\n\n.form-input {\n  color: inherit;\n  width: 15em;\n  font-size: 1em;\n  padding: 0.4em 0.2em;\n  outline: none;\n}\n\n.form-button {\n  margin-left: 1em;\n  font-size: 0.9em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  background-color: #02b875;\n  border: none;\n}\n\n.delete-button {\n  margin-left: 1em;\n  font-size: 0.9em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  background-color: #b71c1c;\n  border: none;\n}\n\n.grid-container {\n  width: 60em;\n  display: flex;\n  display: -webkit-flex;\n  flex-wrap: wrap;\n  -webkit-flex-wrap: wrap;\n}\n\n.book-entry {\n  flex: 0 0 20%;\n  -webkit-flex: 0 0 20%;\n  padding: 0 1em;\n  text-align: center;\n}\n\n.book-image {\n  margin-top: 1em;\n  width: calc(48em / 5);\n  border: 1px solid #cccccc;\n}\n\n/* Register View */\n\n.register-container {\n  margin: 0 auto;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  align-items: center;\n  -webkit-align-items: center;\n}\n\n\n.register-form {\n  width: 15em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.register-input {\n  margin-bottom: 1em;\n  flex: 1;\n  -webkit-flex: 1;\n  color: inherit;\n  font-size: 1em;\n  padding: 0.4em 0.2em;\n  outline: none;\n}\n\n.register-submit {\n  margin: 1em 0;\n  opacity: 0.8;\n  cursor: pointer;\n  transition: all 0.25s;\n  -webkit-transition: all 0.25s;\n  border-radius: 2px;\n  font-size: 0.9em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  background-color: #02b875;\n  border: none;\n}\n\n.register-submit:hover {\n  opacity: 1;\n}\n\n.error-messages {\n  color: #ef5350;\n}\n\n.error-messages > p {\n  text-align: center;\n  margin: 0.5em 0;\n}\n\n.success-messages {\n  color: #02b875;\n}\n\n/* Login View */\n\n.login-container {\n  margin: 0 auto;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  align-items: center;\n  -webkit-align-items: center;\n}\n\n.login-form {\n  width: 15em;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n}\n\n.login-input {\n  margin-bottom: 1em;\n  flex: 1;\n  -webkit-flex: 1;\n  color: inherit;\n  font-size: 1em;\n  padding: 0.4em 0.2em;\n  outline: none;\n}\n\n.login-submit {\n  margin: 1em 0;\n  opacity: 0.8;\n  cursor: pointer;\n  transition: all 0.25s;\n  -webkit-transition: all 0.25s;\n  border-radius: 2px;\n  font-size: 0.9em;\n  padding: 0.6em 1.5em;\n  color: #ffffff;\n  background-color: #02b875;\n  border: none;\n}\n\n/* Settings View */\n\n.settings-container {\n  margin: 0 auto;\n  display: flex;\n  display: -webkit-flex;\n  flex-direction: column;\n  -webkit-flex-direction: column;\n  align-items: center;\n  -webkit-align-items: center;\n}\n", ""]);
 
 	// exports
 
 
 /***/ },
-/* 542 */
+/* 543 */
 /***/ function(module, exports) {
 
 	/*
@@ -36099,7 +36209,7 @@
 
 
 /***/ },
-/* 543 */
+/* 544 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -36349,6 +36459,84 @@
 			URL.revokeObjectURL(oldSrc);
 	}
 
+
+/***/ },
+/* 545 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(298);
+
+	var React = _interopRequireWildcard(_react);
+
+	var _reactRouter = __webpack_require__(468);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var HeaderButtons = function (_React$Component) {
+	  _inherits(HeaderButtons, _React$Component);
+
+	  function HeaderButtons(props) {
+	    _classCallCheck(this, HeaderButtons);
+
+	    return _possibleConstructorReturn(this, (HeaderButtons.__proto__ || Object.getPrototypeOf(HeaderButtons)).call(this, props));
+	  }
+
+	  _createClass(HeaderButtons, [{
+	    key: "render",
+	    value: function render() {
+	      var auth = this.props.auth;
+	      if (auth) {
+	        return React.createElement(
+	          "div",
+	          { className: "header-right" },
+	          React.createElement(
+	            _reactRouter.Link,
+	            { className: "header-button-right", to: "/logout" },
+	            "Sign Out"
+	          ),
+	          React.createElement(
+	            _reactRouter.Link,
+	            { className: "header-button-right", to: "/settings" },
+	            "Settings"
+	          )
+	        );
+	      } else {
+	        return React.createElement(
+	          "div",
+	          { className: "header-right" },
+	          React.createElement(
+	            _reactRouter.Link,
+	            { className: "header-button-right", to: "/register" },
+	            "Sign Up"
+	          ),
+	          React.createElement(
+	            _reactRouter.Link,
+	            { className: "header-button-right", to: "/login" },
+	            "Sign In"
+	          )
+	        );
+	      }
+	    }
+	  }]);
+
+	  return HeaderButtons;
+	}(React.Component);
+
+	exports.default = HeaderButtons;
 
 /***/ }
 /******/ ]);

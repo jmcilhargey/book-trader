@@ -4,6 +4,7 @@ const router = require("express").Router();
 const books = require("../apis/books");
 const transform = require("../helpers/transform");
 const mid = require("../middleware");
+const jwt = require("jsonwebtoken");
 
 const Library = require("../models/library");
 const User = require("../models/user");
@@ -44,13 +45,16 @@ router.post("/login", mid.loggedOut, (req, res, next) => {
     error.status = 400;
     return next(error);
   }
-  User.authenticate(req.body.email, req.body.password, function(error, user) {
+  User.authenticate(req.body.email, req.body.password, (error, user) => {
     if (error || !user) {
       return next(error);
     }
-    req.session.userId = user._id;
-    console.log(req.session);
-    res.send({ message: ["Success, you're logged in!"] });
+    jwt.sign({ role: "User" }, process.env.JWT_SECRET, { algorithm: "HS256", expiresIn: "1d"}, (error, token) => {
+      if (error) {
+        return next(error);
+      }
+      res.send({ message: ["Success, you're logged in!"], token: token, authenticated: true });
+    });
   });
 });
 

@@ -1,6 +1,7 @@
 "use strict";
 
 import * as React from "react";
+import fetch from "isomorphic-fetch";
 import LoginForm from "../components/loginform";
 import ErrorMessage from "../components/errormessage";
 import SuccessMessage from "../components/successmessage";
@@ -21,17 +22,19 @@ class Login extends React.Component {
     this.setState({ password: value });
   }
   handleLogin() {
-    fetch("api/login", {
+    fetch("/api/login", {
       method: "POST",
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded"
       },
+      credentials: "same-origin",
       body: `email=${ this.state.email }&password=${ this.state.password }`
     }).then((response) => response.json())
-      .then((json) => this.setState({ success: json.message || [] }))
-    this.setState({ email: "", password: "" });
-    console.log(this.state);
+      .then((json) => {
+        this.setState({ success: json.message || [] });
+        this.props.onAuth(json.token);
+      });
   }
   handleError(value) {
     this.setState({ errors: value || [] });

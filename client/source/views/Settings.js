@@ -1,10 +1,20 @@
 "use strict";
 
 import * as React from "react";
+import UserInfo from "../components/userinfo";
 
 class Settings extends React.Component {
+  constructor() {
+    super();
+    this.state = { first: "", last: "", email: "", books: [] }
+  }
   render() {
-    return <h1>Settings View</h1>
+    return (
+      <div className="settings-container">
+        <h1>My Settings</h1>
+        <UserInfo />
+      </div>
+    );
   }
 }
 

@@ -51,10 +51,7 @@ class RegisterForm extends React.Component {
   }
   onSubmit(event) {
     event.preventDefault();
-
     if (this.isValidSubmit()) {
-      this.props.
-
       onSubmit();
     }
   }

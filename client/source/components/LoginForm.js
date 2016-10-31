@@ -24,7 +24,8 @@ class LoginForm extends React.Component {
       return true;
     }
   }
-  onSubmit() {
+  onSubmit(event) {
+    event.preventDefault();
     if (this.isValidSubmit()) {
       this.props.onSubmit();
     }

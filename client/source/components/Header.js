@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { Link } from "react-router";
+import HeaderButtons from "./headerbuttons";
 
 class Header extends React.Component {
   render() {
@@ -18,11 +19,7 @@ class Header extends React.Component {
             <Link className="header-button-middle" to="/search">Browse Books</Link>
             <Link className="header-button-middle" to="/account">My Books</Link>
           </div>
-          <div className="header-right">
-            <Link className="header-button-right" to="/register">Sign Up</Link>
-            <Link className="header-button-right" to="/login">Sign In</Link>
-            <Link className="header-button-right" to="/settings">Settings</Link>
-          </div>
+          <HeaderButtons auth={ this.props.auth } />
         </div>
       </header>
     );

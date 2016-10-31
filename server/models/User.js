@@ -28,6 +28,7 @@ const UserSchema = new Schema({
 });
 
 UserSchema.statics.authenticate = (email, password, callback) => {
+
   User.findOne({ email: email })
     .exec((error, user) => {
       if (error) {

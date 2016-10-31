@@ -13,20 +13,21 @@ class Account extends React.Component {
     this.handleBookRequest = this.handleBookRequest.bind(this);
   }
   handleBookRequest(value) {
-
+    
     if (!value.length) { return; }
-
-    fetch("api/books", {
+    fetch("/api/books", {
       method: "POST",
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/x-www-form-urlencoded"
       },
+      credentials: "same-origin",
       body: `search=${ value }`
     }).then((response) => response.json())
       .then((json) => this.setState({ books: json }))
   }
   render() {
+    console.log(localStorage);
     const search = this.state.search;
     const books = this.state.books;
     return (
