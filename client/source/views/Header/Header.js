@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { Link } from "react-router";
-import HeaderButtons from "./headerbuttons";
+import HeaderButtons from "./components/headerbuttons";
 
 class Header extends React.Component {
   render() {

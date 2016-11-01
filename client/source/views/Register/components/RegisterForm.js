@@ -52,22 +52,27 @@ class RegisterForm extends React.Component {
   onSubmit(event) {
     event.preventDefault();
     if (this.isValidSubmit()) {
-      onSubmit();
+      this.props.onSubmit();
+      this.refs["first-name"].value = "";
+      this.refs["last-name"].value = "";
+      this.refs.email.value = "";
+      this.refs.password.value = "";
+      this.refs.confirm.value = "";
     }
   }
   render() {
     return (
       <form className="register-form" onSubmit={ this.onSubmit }>
         <label htmlFor="first-name">First Name</label>
-        <input className="register-input" onChange={ this.onFirstChange } type="text" id="first-name" />
+        <input className="register-input" onChange={ this.onFirstChange } type="text" ref="first-name" />
         <label htmlFor="last-name">Last Name</label>
-        <input className="register-input" onChange={ this.onLastChange } type="text" id="last-name" />
+        <input className="register-input" onChange={ this.onLastChange } type="text" ref="last-name" />
         <label htmlFor="email">Email</label>
-        <input className="register-input" onChange={ this.onEmailChange } type="email" id="email" />
+        <input className="register-input" onChange={ this.onEmailChange } type="email" ref="email" />
         <label htmlFor="password">Password</label>
-        <input className="register-input" onChange={ this.onPasswordChange } type="password" id="password" />
+        <input className="register-input" onChange={ this.onPasswordChange } type="password" ref="password" />
         <label htmlFor="confirm-password">Confirm Password</label>
-        <input className="register-input" onChange={ this.onConfirmChange } type="password" id="confirm-password" />
+        <input className="register-input" onChange={ this.onConfirmChange } type="password" ref="confirm" />
         <input className="register-submit" type="submit" value="Sign Up"/>
       </form>
     );

@@ -2,9 +2,9 @@
 
 import * as React from "react";
 import fetch from "isomorphic-fetch";
-import LoginForm from "../components/loginform";
-import ErrorMessage from "../components/errormessage";
-import SuccessMessage from "../components/successmessage";
+import LoginForm from "./components/loginform";
+import ErrorMessage from "./components/errormessage";
+import SuccessMessage from "./components/successmessage";
 
 class Login extends React.Component {
   constructor() {
@@ -32,8 +32,10 @@ class Login extends React.Component {
       body: `email=${ this.state.email }&password=${ this.state.password }`
     }).then((response) => response.json())
       .then((json) => {
-        this.setState({ success: json.message || [] });
-        this.props.onAuth(json.token);
+        if (json.token) {
+          this.props.onAuth(json.token);
+        }
+        this.setState({ email: "", password: "", errors: json.error || [], success: json.success || [] });
       });
   }
   handleError(value) {

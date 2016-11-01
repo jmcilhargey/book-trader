@@ -20,6 +20,7 @@ mongoose.connect(process.env.MONGO_URI || "mongodb://localhost/test", (error, re
   }
 });
 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname + "/../client/build")));
 

@@ -10,6 +10,9 @@ class SuccessMessage extends React.Component {
     const messages = this.props.success.map((message, index) => {
       return <p key={ index }>{ message }</p>
     });
+    if (!messages.length) {
+      return null;
+    }
     return (
       <div className="success-messages">
         { this.props.success }

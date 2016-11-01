@@ -12,8 +12,13 @@ body {
   letter-spacing: 0.05em;
 }
 
-h1, h2, h3, p, input {
+h1, h2, h3, p, input, li {
   font-weight: 300;
+}
+
+svg {
+  width: 32px;
+  height: 32px;
 }
 
 a, button {
@@ -169,8 +174,13 @@ a:hover, button:hover {
   border: none;
 }
 
-.grid-container {
+.search-container {
   width: 60em;
+  display: flex;
+  display: -webkit-flex;
+}
+
+.search-results {
   display: flex;
   display: -webkit-flex;
   flex-wrap: wrap;
@@ -182,6 +192,23 @@ a:hover, button:hover {
   -webkit-flex: 0 0 20%;
   padding: 0 1em;
   text-align: center;
+}
+
+.book-detail {
+  flex: 0 0 20em;
+}
+
+.book-detail > button {
+  opacity: 0.8;
+  cursor: pointer;
+  transition: all 0.25s;
+  -webkit-transition: all 0.25s;
+  border-radius: 2px;
+  font-size: 0.9em;
+  padding: 0.6em 1.5em;
+  color: #ffffff;
+  background-color: #02b875;
+  border: none;
 }
 
 .book-image {
@@ -306,4 +333,38 @@ a:hover, button:hover {
   -webkit-flex-direction: column;
   align-items: center;
   -webkit-align-items: center;
+}
+
+.user-info {
+  display: flex;
+  display: -webkit-flex;
+  flex-direction: column;
+  -webkit-flex-direction: column;
+  justify-content: center;
+  -webkit-justify-content: center;
+  list-style: none;
+}
+
+.user-datum  {
+  width: 30em;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  -webkit-justify-content: center;
+  align-items: center;
+  -webkit-align-items: center;
+}
+
+.user-datum > i {
+  flex: 1;
+  -webkit-flex: 1;
+}
+
+.user-datum > h3 {
+  flex: 10;
+  -webkit-flex: 10;
+}
+
+.user-info g {
+  fill: #212121;
 }

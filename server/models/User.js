@@ -23,7 +23,14 @@ const UserSchema = new Schema({
     type: String,
     required: true
   },
-  books: Array,
+  books: [{
+    title: String,
+    authors: String,
+    description: String,
+    isbn: String,
+    pages: String,
+    image: String
+  }],
   trades: Array
 });
 

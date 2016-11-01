@@ -10,11 +10,15 @@ class ErrorMessage extends React.Component {
     const messages = this.props.errors.map((message, index) => {
       return <p key={ index }>{ message }</p>
     });
-    return (
-      <div className="error-messages">
-        { messages }
-      </div>
-    );
+    if (!messages.length) {
+      return null;
+    } else {
+      return (
+        <div className="error-messages">
+          { messages }
+        </div>
+      );
+    }
   }
 }
 

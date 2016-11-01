@@ -23,11 +23,21 @@ const User = new Schema({
     type: String,
     required: true
   },
-  books: Array,
+  books: [
+    {
+      title: String,
+      authors: String,
+      description: String,
+      isbn: String,
+      pages: String,
+      image: String
+    }
+  ],
   trades: Array
 });
 
 User.statics.authenticate = (email, password, callback) => {
+
   User.findOne({ email: email })
     .exec((error, user) => {
       if (error) {
