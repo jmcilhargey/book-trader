@@ -43,7 +43,13 @@ class Register extends React.Component {
       credentials: "same-origin",
       body: `first=${ this.state.first }&last=${ this.state.last }&email=${ this.state.email }&password=${ this.state.password }&confirm=${ this.state.confirm }`
     }).then((response) => response.json())
-      .then((json) => this.setState({ success: json.message || [] }))
+      .then((json) => {
+        if (json.error) {
+          this.setState({ errors: new Array(json.message) })
+        } else {
+          this.setState({ success: new Array(json.message) });
+        }
+      });
     this.setState({ first: "", last: "", email: "", password: "", confirm: "", errors: [], success: [] });
   }
   handleError(value) {
