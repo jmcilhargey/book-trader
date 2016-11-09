@@ -3,7 +3,8 @@
 import * as React from "react";
 import fetch from "isomorphic-fetch";
 import SearchForm from "./components/searchform";
-import BookSearch from "./components/booksearch";
+import SearchResults from "./components/searchresults";
+import google from "../../images/google-dev.svg";
 
 class Search extends React.Component {
 
@@ -15,7 +16,7 @@ class Search extends React.Component {
   }
   handleBookRequest(value) {
     if (!value.length) { return; }
-    fetch("/api/books", {
+    fetch("/api/search", {
       method: "POST",
       headers: {
         "Accept": "application/json",
@@ -24,10 +25,11 @@ class Search extends React.Component {
       credentials: "same-origin",
       body: `search=${ value }`
     }).then((response) => response.json())
-      .then((json) => this.setState({ books: json }));
+      .then((json) => {
+        this.setState({ books: json });
+      });
   }
   handleAddBook(index) {
-    console.log(JSON.stringify(this.state.books[index]));
     fetch("/api/add", {
       method: "POST",
       headers: {
@@ -43,9 +45,10 @@ class Search extends React.Component {
   render() {
     return (
       <div className="account-container">
-        <h1>Find Books</h1>
+        <h1>Add Books to Library</h1>
         <SearchForm onChange={ this.handleBookRequest }/>
-        <BookSearch books={ this.state.books } onAddBook={ this.handleAddBook }/>
+        <SearchResults books={ this.state.books } onAddBook={ this.handleAddBook }/>
+        <p className="data-label">Data provided by <span dangerouslySetInnerHTML={{ __html: google }}></span> Google Books API</p>
       </div>
     );
   }

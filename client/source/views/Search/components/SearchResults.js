@@ -3,7 +3,7 @@
 import * as React from "react";
 import BookDetail from "./bookdetail";
 
-class BookSearch extends React.Component {
+class SearchResults extends React.Component {
 
   constructor(props) {
     super(props);
@@ -42,4 +42,4 @@ class BookSearch extends React.Component {
   }
 }
 
-export default BookSearch
+export default SearchResults

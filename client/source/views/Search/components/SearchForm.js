@@ -9,13 +9,9 @@ class SearchForm extends React.Component {
     this.state = { value: "" };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleDelete = this.handleDelete.bind(this);
   }
   handleChange(event) {
     this.setState({ value: event.target.value });
-  }
-  handleDelete(event) {
-    alert("This would delete a book");
   }
   handleSubmit(event) {
     this.props.onChange(this.state.value.trim());
@@ -29,8 +25,6 @@ class SearchForm extends React.Component {
           onChange={ this.handleChange } />
         <button className="form-button"
           onClick={ this.handleSubmit }>Find Book</button>
-        <button className="delete-button"
-          onClick={ this.handleDelete }>Remove Book</button>
       </div>
     );
   }
