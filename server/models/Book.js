@@ -1,0 +1,20 @@
+"use strict";
+
+const mongoose = require("mongoose");
+const Schema = mongoose.Schema;
+
+const BookSchema = new Schema({
+  title: String,
+  authors: String,
+  description: String,
+  isbn: String,
+  pages: String,
+  image: String,
+  owner: String,
+  id: Schema.Types.ObjectId,
+  available: { type: Boolean, default: true }
+});
+
+const Book = mongoose.model("Book", BookSchema);
+
+module.exports = Book;

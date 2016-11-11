@@ -5,6 +5,12 @@ const bcrypt = require("bcrypt");
 const Schema = mongoose.Schema;
 
 const UserSchema = new Schema({
+  username: {
+    type: String,
+    unique: true,
+    required: true,
+    trim: true
+  },
   email: {
     type: String,
     unique: true,
@@ -13,11 +19,13 @@ const UserSchema = new Schema({
   },
   first: {
     type: String,
-    trim: true
+    trim: true,
+    default: ""
   },
   last: {
     type: String,
-    trim: true
+    trim: true,
+    default: ""
   },
   password: {
     type: String,
@@ -29,9 +37,13 @@ const UserSchema = new Schema({
     description: String,
     isbn: String,
     pages: String,
-    image: String
+    image: String,
+    owner: String,
+    id: Schema.Types.ObjectId,
+    available: { type: Boolean, default: true }
   }],
-  trades: Array
+  trades: { type: Array, default: [] },
+  tokens: { type: Array, default: [] }
 });
 
 UserSchema.statics.authenticate = (email, password, callback) => {
