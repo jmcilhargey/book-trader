@@ -5,19 +5,15 @@ import * as React from "react";
 class RegisterForm extends React.Component {
   constructor(props) {
     super(props);
-    this.onFirstChange = this.onFirstChange.bind(this);
-    this.onLastChange = this.onLastChange.bind(this);
+    this.onNameChange = this.onNameChange.bind(this);
     this.onEmailChange = this.onEmailChange.bind(this);
     this.onPasswordChange = this.onPasswordChange.bind(this);
     this.onConfirmChange = this.onConfirmChange.bind(this);
     this.isValidSubmit = this.isValidSubmit.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
   }
-  onFirstChange(event) {
-    this.props.onFirstChange(event.target.value);
-  }
-  onLastChange(event) {
-    this.props.onLastChange(event.target.value)
+  onNameChange(event) {
+    this.props.onNameChange(event.target.value);
   }
   onEmailChange(event) {
     this.props.onEmailChange(event.target.value)
@@ -53,8 +49,7 @@ class RegisterForm extends React.Component {
     event.preventDefault();
     if (this.isValidSubmit()) {
       this.props.onSubmit();
-      this.refs["first-name"].value = "";
-      this.refs["last-name"].value = "";
+      this.refs["user-name"].value = "";
       this.refs.email.value = "";
       this.refs.password.value = "";
       this.refs.confirm.value = "";
@@ -63,10 +58,8 @@ class RegisterForm extends React.Component {
   render() {
     return (
       <form className="register-form" onSubmit={ this.onSubmit }>
-        <label htmlFor="first-name">First Name</label>
-        <input className="register-input" onChange={ this.onFirstChange } type="text" ref="first-name" />
-        <label htmlFor="last-name">Last Name</label>
-        <input className="register-input" onChange={ this.onLastChange } type="text" ref="last-name" />
+        <label htmlFor="user-name">Username</label>
+        <input className="register-input" onChange={ this.onNameChange } type="text" ref="user-name" />
         <label htmlFor="email">Email</label>
         <input className="register-input" onChange={ this.onEmailChange } type="email" ref="email" />
         <label htmlFor="password">Password</label>
