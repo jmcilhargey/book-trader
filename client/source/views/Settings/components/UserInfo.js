@@ -8,33 +8,51 @@ import envelope from "../../../images/envelope.svg";
 class UserInfo extends React.Component {
   constructor(props) {
     super(props);
-    this.onNameChange = this.onNameChange.bind(this);
+    this.onFirstChange = this.onFirstChange.bind(this);
+    this.onLastChange = this.onLastChange.bind(this);
     this.onEmailChange = this.onEmailChange.bind(this);
   }
-  onNameChange(event) {
-    this.props.onNameChange(event.target.value);
+  onFirstChange(event) {
+    this.props.onFirstChange(event.target.value);
+  }
+  onLastChange(event) {
+    this.props.onLastChange(event.target.value);
   }
   onEmailChange(event) {
     this.props.onEmailChange(event.target.value);
   }
   render() {
-    let name = null;
+    let first = null;
+    let last = null;
     let email = null;
+    let username = this.props.username;
     if (this.props.editInfo) {
-      name = <input className="form-input" type="text" value={ this.props.first } onChange={ this.onNameChange } />
-      email = <input className="form-input" type="text" value={ this.props.email } onChange={ this.onEmailChange }/>
+      first = <input className="form-input" type="text" value={ this.props.first } onChange={ this.onFirstChange } />
+      last = <input className="form-input" type="text" value={ this.props.last } onChange={ this.onLastChange } />
+      email = <input className="form-input" type="text" value={ this.props.email } onChange={ this.onEmailChange } />
     } else {
-      name = this.props.first
+      first = this.props.first
+      last = this.props.last
       email = this.props.email
     }
     return (
       <div className="user-info">
         <div className="user-datum">
           <div dangerouslySetInnerHTML={{ __html: avatar }}></div>
-          <h3>
-            <b>Name</b>
-            { name }
-          </h3>
+          <div className="user-name">
+            <h3>
+              <b>Username</b>
+              { username }
+            </h3>
+            <h3>
+              <b>First</b>
+              { first }
+            </h3>
+            <h3>
+              <b>Last</b>
+              { last }
+            </h3>
+          </div>
         </div>
         <div className="user-datum">
           <div dangerouslySetInnerHTML={{ __html: envelope }}></div>

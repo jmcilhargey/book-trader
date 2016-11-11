@@ -10,13 +10,14 @@ import ErrorMessage from "./components/errormessage";
 class Settings extends React.Component {
   constructor() {
     super();
-    this.state = { first: "", last: "", email: "", books: [], editInfo: false, editBooks: false, isEdit: false, errors: [], edits: [] }
+    this.state = { username: "", first: "", last: "", email: "", books: [], trades: [], editInfo: false, editBooks: false, isEdit: false, errors: [], edits: [] }
     this.getUserInfo = this.getUserInfo.bind(this);
     this.componentWillMount = this.componentWillMount.bind(this);
     this.toggleEditInfo = this.toggleEditInfo.bind(this);
     this.toggleEditBooks = this.toggleEditBooks.bind(this);
     this.handleSave = this.handleSave.bind(this);
-    this.handleEditName = this.handleEditName.bind(this);
+    this.handleEditFirst = this.handleEditFirst.bind(this);
+    this.handleEditLast = this.handleEditLast.bind(this);
     this.handleEditEmail = this.handleEditEmail.bind(this);
     this.handleDeleteBooks = this.handleDeleteBooks.bind(this);
   }
@@ -37,7 +38,7 @@ class Settings extends React.Component {
         if (json.error) {
           this.setState({ errors: new Array(json.message)});
         } else {
-          this.setState({ first: json.first, last: json.last, email: json.email, books: json.books, edits: json.books.map((book) => { return { id: book.id, remove: false } }) });
+          this.setState({ username: json.username, first: json.first, last: json.last, email: json.email, trades: json.trades, books: json.books, edits: json.books.map((book) => { return { id: book.id, remove: false } }) });
         }
     });
   }
@@ -51,8 +52,11 @@ class Settings extends React.Component {
     const edit = !this.state.isEdit;
     this.setState({ editBooks: books, isEdit: edit });
   }
-  handleEditName(change) {
+  handleEditFirst(change) {
     this.setState({ first: change });
+  }
+  handleEditLast(change) {
+    this.setState({ last: change });
   }
   handleEditEmail(change) {
     this.setState({ email: change });
@@ -78,13 +82,13 @@ class Settings extends React.Component {
         "X-Access-Token": localStorage.token
       },
       credentials: "same-origin",
-      body: `first=${ this.state.first }&email=${ this.state.email }`
+      body: `first=${ this.state.first }&last=${ this.state.last }&email=${ this.state.email }`
     }).then((response) => response.json())
       .then((json) => {
         if (json.error) {
           this.setState({ errors: new Array(json.message)});
         } else {
-          this.setState({ first: json.first, email: json.email, editInfo: !this.state.editInfo, isEdit: !this.state.isEdit });
+          this.setState({ first: json.first, last: json.last, email: json.email, editInfo: !this.state.editInfo, isEdit: !this.state.isEdit });
         }
     });
   }
@@ -123,8 +127,10 @@ class Settings extends React.Component {
 
         <UserInfo
         editInfo={ this.state.editInfo }
-        onNameChange={ this.handleEditName }
+        onFirstChange={ this.handleEditFirst }
+        onLastChange={ this.handleEditLast }
         onEmailChange={ this.handleEditEmail }
+        username={ this.state.username }
         first={ this.state.first }
         last={ this.state.last }
         email={ this.state.email } />
@@ -136,7 +142,7 @@ class Settings extends React.Component {
         edits={ this.state.edits } />
 
         <UserTrades
-        trades={ this.state.books.trades } />
+        trades={ this.state.trades } />
 
       </div>
     );
