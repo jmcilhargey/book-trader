@@ -21,7 +21,7 @@ class EditButtons extends React.Component {
   render() {
     return (
       <div className="settings-control">
-        <h2>My Settings</h2>
+        <h2>My Settings & Books</h2>
         { this.props.isEdit ?
           <button className="save-button" onClick={ this.onSave }>Save Changes</button> :
           <div>

@@ -7,6 +7,18 @@ import arrow from "../../../images/arrow.svg";
 class UserTrades extends React.Component {
   constructor(props) {
     super(props);
+    this.onCancelTrade = this.onCancelTrade.bind(this);
+    this.onAcceptTrade = this.onAcceptTrade.bind(this);
+    this.onDeclineTrade = this.onDeclineTrade.bind(this);
+  }
+  onCancelTrade(event) {
+    this.props.onCancelTrade(event.target.name);
+  }
+  onAcceptTrade(event) {
+    this.props.onAcceptTrade(event.target.name);
+  }
+  onDeclineTrade(event) {
+    this.props.onDeclineTrade(event.target.name);
   }
   render() {
     const trades = this.props.trades.map((trade, index) => {
@@ -26,6 +38,14 @@ class UserTrades extends React.Component {
               <p><i>{ trade.trade.authors }</i></p>
             </div>
           </div>
+          { trade.sent ?
+          <div className="trade-buttons">
+            <input className="cancel-button" type="button" name={ index } value="Cancel" onClick={ this.onCancelTrade } />
+          </div> :
+          <div className="trade-buttons">
+            <input className="accept-button" type="button" name={ index } value="Accept" onClick={ this.onAcceptTrade } />
+            <input className="decline-button" type="button" name={ index } value="Decline" onClick={ this.onDeclineTrade } />
+          </div> }
         </div>
       );
     });
@@ -38,7 +58,7 @@ class UserTrades extends React.Component {
           </h3>
         </div>
         <div className="user-books">
-          { trades }
+          { trades.length ? trades : <h3>You have no pending trades</h3> }
         </div>
       </div>
     );
