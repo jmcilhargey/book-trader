@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import fetch from "isomorphic-fetch";
+import { browserHistory } from "react-router";
 import LoginForm from "./components/loginform";
 import ErrorMessage from "./components/errormessage";
 import SuccessMessage from "./components/successmessage";
@@ -34,8 +35,10 @@ class Login extends React.Component {
       .then((json) => {
         if (json.token) {
           this.props.onAuth(json.token);
+          browserHistory.push("/browse");
+        } else {
+          this.setState({ email: "", password: "", errors: json.error || [], success: json.success || [] });
         }
-        this.setState({ email: "", password: "", errors: json.error || [], success: json.success || [] });
       });
   }
   handleError(value) {

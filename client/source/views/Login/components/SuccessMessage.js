@@ -7,17 +7,18 @@ class SuccessMessage extends React.Component {
     super(props);
   }
   render() {
-    const messages = this.props.success.map((message, index) => {
-      return <p key={ index }>{ message }</p>
-    });
-    if (!messages.length) {
+    if (this.props.success.length) {
+      var messages = this.props.success.map((message, index) => <p key={ index }>{ message }</p>);
+    }
+    if (messages) {
+      return (
+        <div className="success-messages">
+          { messages }
+        </div>
+      );
+    } else {
       return null;
     }
-    return (
-      <div className="success-messages">
-        { this.props.success }
-      </div>
-    );
   }
 }
 
