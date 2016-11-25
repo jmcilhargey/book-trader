@@ -146,7 +146,39 @@ class Settings extends React.Component {
     });
   }
   handleAcceptTrade(index) {
-    console.log(this.state.trades[index]);
+    const trade = this.state.trades[index]
+    fetch("/api/trade", {
+      method: "PUT",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Access-Token": localStorage.token
+      },
+      credentials: "same-origin",
+      body: `trade=${ encodeURIComponent(JSON.stringify(trade)) }`
+    }).then((response) => response.json())
+      .then((json) => {
+        if (json.error) {
+          this.setState({ errors: new Array(json.message)});
+        } else {
+          this.setState({ books: json.books, trades: json.trades, success: json.success });
+        }
+    });
+    fetch("/api/library", {
+      method: "PUT",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+        "X-Access-Token": localStorage.token
+      },
+      credentials: "same-origin",
+      body: `trade=${ encodeURIComponent(JSON.stringify(trade)) }`
+    }).then((response) => response.json())
+      .then((json) => {
+        if (json.error) {
+          this.setState({ errors: new Array(json.message)});
+        }
+    });
   }
   handleDeclineTrade(index) {
     const trade = this.state.trades[index]

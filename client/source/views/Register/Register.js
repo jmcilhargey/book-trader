@@ -5,6 +5,7 @@ import fetch from "isomorphic-fetch";
 import RegisterForm from "./components/registerform";
 import ErrorMessage from "./components/errormessage";
 import SuccessMessage from "./components/successmessage";
+import { browserHistory } from "react-router";
 
 class Register extends React.Component {
   constructor() {
@@ -44,6 +45,7 @@ class Register extends React.Component {
           this.setState({ errors: new Array(json.message) })
         } else {
           this.setState({ success: new Array(json.message) });
+          browserHistory.push("/login");
         }
       });
     this.setState({ username: "", email: "", password: "", confirm: "", errors: [], success: [] });
