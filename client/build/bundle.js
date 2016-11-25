@@ -36955,7 +36955,6 @@
 	        if (json.error) {
 	          _this6.setState({ errors: new Array(json.message) });
 	        } else {
-	          console.log(json);
 	          _this6.setState({ books: json.books, trades: json.trades, success: json.success });
 	        }
 	      });
@@ -36973,8 +36972,6 @@
 	      }).then(function (json) {
 	        if (json.error) {
 	          _this6.setState({ errors: new Array(json.message) });
-	        } else {
-	          console.log(json);
 	        }
 	      });
 	    }
