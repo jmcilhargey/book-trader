@@ -7,8 +7,8 @@ const mid = require("../middleware");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
 
-const Book = require("../models/book");
-const User = require("../models/user");
+const Book = require("../models/Book");
+const User = require("../models/User");
 
 router.post("/register", mid.loggedOut, (req, res, next) => {
 
