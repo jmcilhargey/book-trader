@@ -6,8 +6,8 @@ const jwt = require("jsonwebtoken");
 module.exports = {
 
   loggedOut: function(req, res, next) {
-    if (req.session && req.session.userId) {
-      res.redirect("/settings");
+    if (req.decoded) {
+      res.redirect("/");
     }
     return next();
   },
@@ -28,6 +28,6 @@ module.exports = {
     }
   },
   getCookies: function(req, res, next) {
-  //  console.log(req.cookies, req.session);
+    // console.log(req.cookies, req.session);
   }
 }

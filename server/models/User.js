@@ -27,6 +27,16 @@ const UserSchema = new Schema({
     trim: true,
     default: ""
   },
+  city: {
+    type: String,
+    trim: true,
+    default: ""
+  },
+  state: {
+    type: String,
+    trim: true,
+    default: ""
+  },
   password: {
     type: String,
     required: true
@@ -39,14 +49,14 @@ const UserSchema = new Schema({
     pages: String,
     image: String,
     owner: String,
-    id: Schema.Types.ObjectId,
-    available: { type: Boolean, default: true }
+    available: { type: Boolean, default: true },
+    id: Schema.Types.ObjectId
   }],
   trades: { type: Array, default: [] },
   tokens: { type: Array, default: [] }
 });
 
-UserSchema.statics.authenticate = (email, password, callback) => {
+UserSchema.statics.authenticate = function (email, password, callback) {
 
   User.findOne({ email: email })
     .exec((error, user) => {
@@ -58,9 +68,11 @@ UserSchema.statics.authenticate = (email, password, callback) => {
         error.status = 401;
         return callback(error);
       }
-      bcrypt.compare(password, user.password, (error, result) => {
-        if (result) {
+      bcrypt.compare(password, user.password, function (error, match) {
+        if (match) {
           return callback(null, user);
+        } else if (error) {
+          return next(error);
         } else {
           let error = new Error("Credentials don't match");
           error.status = 401;
@@ -70,12 +82,14 @@ UserSchema.statics.authenticate = (email, password, callback) => {
     });
 };
 
-UserSchema.pre("save", function(next) {
+UserSchema.pre("save", function (next) {
 
   const user = this;
-
-  bcrypt.genSalt(10, (error, salt) => {
-    bcrypt.hash(user.password, salt, (error, hash) => {
+  if (!user.isModified("password")) {
+    return next();
+  }
+  bcrypt.genSalt(10, function (error, salt) {
+    bcrypt.hash(user.password, salt, function (error, hash) {
       if (error) {
         return next(error);
       }

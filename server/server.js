@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const path = require("path");
 const routes = require("./routes");
 const mid = require("./middleware");
+const compression = require("compression");
 
 const app = express();
 const bodyParser = require("body-parser");
@@ -20,11 +21,17 @@ mongoose.connect(process.env.MONGO_URI || "mongodb://localhost/test", (error, re
   }
 });
 
+app.use(compression());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname + "/../client/build")));
 
 app.use("/api", routes);
+
+// TODO: Swap for server-side universal react routing
+app.get("/*", (req, res, next) => {
+  res.status(301).redirect("/");
+});
 
 app.use((req, res, next) => {
   let error = new Error("Page not found");

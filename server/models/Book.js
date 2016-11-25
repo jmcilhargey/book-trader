@@ -11,8 +11,8 @@ const BookSchema = new Schema({
   pages: String,
   image: String,
   owner: String,
-  id: Schema.Types.ObjectId,
-  available: { type: Boolean, default: true }
+  available: { type: Boolean, default: true },
+  id: Schema.Types.ObjectId
 });
 
 const Book = mongoose.model("Book", BookSchema);
