@@ -1,5 +1,5 @@
 "use strict";
-require("../../env.js")
+
 const https = require("https");
 const qs = require("../helpers/querystring");
 

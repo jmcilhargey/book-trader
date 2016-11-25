@@ -1,6 +1,5 @@
 "use strict";
 
-require("../../env");
 const jwt = require("jsonwebtoken");
 
 module.exports = {
